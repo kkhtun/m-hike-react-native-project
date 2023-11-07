@@ -12,6 +12,7 @@ import { STACK, TABS } from "./constants";
 import { Database, syncTableHikes, dropDatabase } from "./helpers/database";
 import HikeDetail from "./Pages/HikeDetail";
 import { useTheme } from "react-native-paper";
+import HikeSaveConfirm from "./Pages/HikeSaveConfirm";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -26,6 +27,10 @@ function HikesStackNavigator() {
             <Stack.Screen name={STACK.hikeList.key} component={Hikes} />
             <Stack.Screen name={STACK.hikeForm.key} component={HikeForm} />
             <Stack.Screen name={STACK.hikeDetail.key} component={HikeDetail} />
+            <Stack.Screen
+                name={STACK.hikeSaveConfirm.key}
+                component={HikeSaveConfirm}
+            />
         </Stack.Navigator>
     );
 }
@@ -92,7 +97,7 @@ function TabNavigator() {
     );
 }
 
-function Router({ theme }) {
+function Router({}) {
     const initializeDatabase = useCallback(async () => {
         try {
             // await dropDatabase();

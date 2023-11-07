@@ -16,6 +16,7 @@ const AppBar = ({ navigation, route, options, back }) => {
             {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
             <Appbar.Content title={`MHike | ${title}`} />
             {routeConstant.key === STACK.hikeForm.key ||
+            routeConstant.key === STACK.hikeSaveConfirm.key ||
             routeConstant.key === STACK.settingsHome.key ? (
                 <></>
             ) : (

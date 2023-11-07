@@ -9,7 +9,7 @@ import {
     SegmentedButtons,
     useTheme,
 } from "react-native-paper";
-import { Database, getHike, saveHike, updateHike } from "../helpers/database";
+import { Database, getHike, updateHike } from "../helpers/database";
 import { commonStyles, styleConstants } from "../theme/styles";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import moment from "moment";
@@ -24,18 +24,18 @@ import CustomHelperText from "../components/CustomHelperText";
 import { STACK } from "../constants";
 import DropDown from "react-native-paper-dropdown";
 
-const fakeData = {
-    name: "Hike One",
-    location: "Test Hike Location One",
-    date: "2023-03-01",
-    isParkingAvailable: true,
-    durationInHours: 3,
-    difficultyLevel: 4,
-    description: undefined,
-    rating: 3.5,
-    distance: 8.5,
-    distanceUnit: "km",
-};
+// const payload = {
+//     name: "Hike One",
+//     location: "Test Hike Location One",
+//     date: "2023-03-01",
+//     isParkingAvailable: true,
+//     durationInHours: 3.5,
+//     difficultyLevel: 4,
+//     description: undefined,
+//     rating: 3.5,
+//     distance: 8.5,
+//     distanceUnit: "km",
+// };
 
 const DIFFICULTY_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({
     label: i.toString(),
@@ -72,7 +72,7 @@ function HikeForm({ route, navigation }) {
         });
     };
 
-    const validateAndSaveHike = async () => {
+    const submitForm = async () => {
         setErrors({});
         const error = {};
         if (!name) error["name"] = "Name is required";
@@ -94,9 +94,7 @@ function HikeForm({ route, navigation }) {
         if (!(data["durationInHours"] = convertToFloat(durationInHours))) {
             error["durationInHours"] = "Duration length is invalid";
         }
-        if (
-            !(data["difficultyLevel"] = convertToInteger(difficultyLevel._id))
-        ) {
+        if (!(data["difficultyLevel"] = convertToInteger(difficultyLevel))) {
             error["difficultyLevel"] = "Difficulty is invalid";
         }
         if (!(data["rating"] = convertToFloat(rating))) {
@@ -119,23 +117,28 @@ function HikeForm({ route, navigation }) {
                 description: !description ? null : description,
                 ...data,
             };
+
+            // Proceed to preview confirm page if submission is new (create hike)
+            if (!hikeId) {
+                return navigation.navigate(STACK.hikeSaveConfirm.key, {
+                    hike: payload,
+                });
+            }
+
+            // Update hike
             const database = await Database.getDatabase();
-            const result = hikeId
-                ? await updateHike(database, { hikeId, ...payload })
-                : await saveHike(database, payload);
+            const result = await updateHike(database, { hikeId, ...payload });
             const operation = result[0];
             if (operation.rowsAffected > 0) {
                 notification.success("Hike saved Successfully");
-                hikeId
-                    ? navigation.navigate(STACK.hikeDetail.key, {
-                          hikeId,
-                      })
-                    : navigation.navigate(STACK.hikeList.key, {
-                          refresh: true,
-                      });
+                return navigation.navigate(STACK.hikeDetail.key, {
+                    hikeId,
+                });
             }
+            throw new Error("Something went wrong during saving hike");
         } catch (error) {
-            console.log(error);
+            notification.error(error.message);
+            console.log(error.message);
         }
     };
 
@@ -246,6 +249,7 @@ function HikeForm({ route, navigation }) {
                         color: useTheme().dark ? "white" : "black",
                     }}
                 />
+                <CustomHelperText errors={errors} value="difficultyLevel" />
             </Surface>
 
             <Surface elevation={2} style={commonStyles.formElement}>
@@ -334,7 +338,7 @@ function HikeForm({ route, navigation }) {
 
             <Button
                 mode="contained"
-                onPress={() => validateAndSaveHike()}
+                onPress={() => submitForm()}
                 style={{
                     marginTop: styleConstants.spacing.medium,
                     marginBottom: styleConstants.spacing.large,

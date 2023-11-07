@@ -4,32 +4,25 @@ import { Database, getHikes } from "../helpers/database";
 import NotificationContext from "../context/snackbar.context";
 import { ActivityIndicator, Text } from "react-native-paper";
 import { hikeCardStyles } from "../theme/styles";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { RefreshControl, TouchableOpacity } from "react-native-gesture-handler";
 import { STACK } from "../constants";
+import EmptyComponent from "../components/EmptyComponent";
 
-function Hikes({ navigation, route }) {
-    const { refresh = false } = route?.params || {};
-
+function Hikes({ navigation }) {
     const [hikes, setHikes] = useState([]);
     const [count, setCount] = useState(0);
     const [skip, setSkip] = useState(0);
     const [lastSkip, setLastSkip] = useState(skip);
     const [isLoading, setIsLoading] = useState(false);
+    const [refreshing] = useState(false);
     const notification = useContext(NotificationContext);
 
     const getPaginatedHikes = async ({ skip = 0 } = {}) => {
+        console.log(skip);
         setIsLoading(true);
         try {
             const database = await Database.getDatabase();
             const { data, count } = await getHikes(database, { skip });
-
-            // Fake Data
-            // const count = 50;
-            // const data = [];
-            // for (let i = 0; i < 10 && skip < count; i++) {
-            //     const fakeId = i + skip;
-            //     data.push({ _id: fakeId, name: `Test ${fakeId}` });
-            // }
             setIsLoading(false);
             return { count, data };
         } catch (error) {
@@ -39,21 +32,33 @@ function Hikes({ navigation, route }) {
         }
     };
 
-    useEffect(() => {
-        if (refresh) {
-            setSkip(0);
-            setLastSkip(0);
-        }
-    }, [refresh]);
+    const getData = ({ skip }) => {
+        return getPaginatedHikes({ skip })
+            .then(({ data, count }) => {
+                setCount(count);
+                if (skip === 0) return setHikes(data);
+                if (skip === lastSkip) return setLastSkip(skip);
+                setLastSkip(skip);
+                setHikes(hikes => [...hikes, ...data]);
+                return;
+            })
+            .catch(e => {
+                notification.error(e.message);
+            });
+    };
 
     useEffect(() => {
-        getPaginatedHikes({ skip }).then(({ data, count }) => {
-            setCount(count);
-            if (skip === 0) return setHikes(data);
-            if (skip === lastSkip) return setLastSkip(skip);
-            return setHikes(hikes => [...hikes, ...data]);
-        });
+        getData({ skip });
     }, [skip]);
+
+    const onPullDownToRefresh = e => {
+        if (skip !== 0) {
+            setSkip(0);
+            setLastSkip(0);
+            return;
+        }
+        getData({ skip });
+    };
 
     const ListEndLoader = () => {
         if (isLoading) {
@@ -115,10 +120,19 @@ function Hikes({ navigation, route }) {
                 renderItem={renderItem}
                 keyExtractor={item => item._id}
                 removeClippedSubviews
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onPullDownToRefresh}
+                    />
+                }
+                ListEmptyComponent={<EmptyComponent />}
+                refreshing={true}
+                onEndReachedThreshold={0}
                 onEndReached={() => {
                     setSkip(skip => {
+                        if (skip > count || count === 0) return skip;
                         const newSkip = skip + 10;
-                        if (newSkip > count) return skip;
                         return newSkip;
                     });
                 }}
