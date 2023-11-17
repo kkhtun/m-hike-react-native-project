@@ -17,7 +17,7 @@ function HikeSaveConfirm({ route, navigation }) {
             const result = await saveHike(database, hike);
             const operation = result[0];
             if (operation.rowsAffected > 0) {
-                notification.success("Hike saved Successfully");
+                notification.success("Hike saved successfully");
                 return navigation.reset({
                     index: 0,
                     routes: [{ name: STACK.hikeList.key }],

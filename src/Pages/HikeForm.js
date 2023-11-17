@@ -24,6 +24,7 @@ import CustomHelperText from "../components/CustomHelperText";
 import { STACK } from "../constants";
 import DropDown from "react-native-paper-dropdown";
 
+// Dummy data
 // const payload = {
 //     name: "Hike One",
 //     location: "Test Hike Location One",
