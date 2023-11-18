@@ -1,7 +1,7 @@
 import React from "react";
 import { useContext } from "react";
 import NotificationContext from "../context/snackbar.context";
-import { Snackbar, Portal, Icon } from "react-native-paper";
+import { Snackbar, Portal } from "react-native-paper";
 
 const CustomSnackbar = () => {
     const notificationCtx = useContext(NotificationContext);
