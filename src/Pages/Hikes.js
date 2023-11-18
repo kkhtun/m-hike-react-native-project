@@ -18,7 +18,6 @@ function Hikes({ navigation }) {
     const notification = useContext(NotificationContext);
 
     const getPaginatedHikes = async ({ skip = 0 } = {}) => {
-        console.log(skip);
         setIsLoading(true);
         try {
             const database = await Database.getDatabase();

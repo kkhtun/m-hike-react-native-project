@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback } from "react";
 import Hikes from "./Pages/Hikes";
-import Observations from "./Pages/Observations";
 import Settings from "./Pages/Settings";
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
@@ -34,21 +33,6 @@ function HikesStackNavigator() {
         </Stack.Navigator>
     );
 }
-
-// function ObservationsStackNavigator() {
-//     return (
-//         <Stack.Navigator
-//             initialRouteName={STACK.observationList.key}
-//             screenOptions={{
-//                 header: props => <AppBar {...props} />,
-//             }}>
-//             <Stack.Screen
-//                 name={STACK.observationList.key}
-//                 component={Observations}
-//             />
-//         </Stack.Navigator>
-//     );
-// }
 
 function SettingsStackNavigator() {
     return (
@@ -100,7 +84,6 @@ function TabNavigator() {
 function Router({}) {
     const initializeDatabase = useCallback(async () => {
         try {
-            // await dropDatabase();
             const database = await Database.getDatabase();
             await syncTableHikes(database);
         } catch (error) {
