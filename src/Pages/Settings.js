@@ -75,22 +75,6 @@ function Settings({ navigation }) {
                     </Text>
                 </Button>
             </Surface>
-
-            {/* <Button
-                mode="text"
-                onPress={e =>
-                    confirmDialogContext.open(
-                        "Are you sure you want to delete this hike?",
-                        async () => {
-                            await deleteHikeCallback({
-                                hikeId: hike._id,
-                            });
-                            navigation.navigate(STACK.hikeList.key);
-                        },
-                    )
-                }>
-                Delete
-            </Button> */}
         </ScrollView>
     );
 }

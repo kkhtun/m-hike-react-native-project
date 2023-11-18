@@ -22,7 +22,6 @@ const CustomSnackbar = () => {
                         onDismissSnackBar();
                     },
                 }}>
-                {/* <Icon source="camera" size={20} /> */}
                 {notificationCtx.notificationText}
             </Snackbar>
         </Portal>
