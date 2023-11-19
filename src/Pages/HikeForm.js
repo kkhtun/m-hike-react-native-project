@@ -171,7 +171,7 @@ function HikeForm({ route, navigation }) {
         <ScrollView style={commonStyles.appContainer}>
             <Surface elevation={2} style={commonStyles.formElement}>
                 <TextInput
-                    label="Name"
+                    label="Name *"
                     value={name}
                     onChangeText={text => setName(text)}
                     style={commonStyles.fillHeight}
@@ -181,7 +181,7 @@ function HikeForm({ route, navigation }) {
 
             <Surface elevation={2} style={commonStyles.formElement}>
                 <TextInput
-                    label="Location"
+                    label="Location *"
                     value={location}
                     onChangeText={text => setLocation(text)}
                     style={commonStyles.fillHeight}
@@ -196,7 +196,7 @@ function HikeForm({ route, navigation }) {
                     ...commonStyles.datePickerFormElement,
                 }}>
                 <TextInput
-                    label="Date"
+                    label="Date *"
                     value={formatDate(date)}
                     onChangeText={text => setDate(date)}
                     editable={false}
@@ -219,7 +219,7 @@ function HikeForm({ route, navigation }) {
                     onPress={() => {
                         setIsParkingAvailable(prev => !prev);
                     }}
-                    label="Is Parking Available"
+                    label="Is Parking Available *"
                     style={commonStyles.fillHeight}
                 />
                 <CustomHelperText errors={errors} value="isParkingAvailable" />
@@ -228,7 +228,7 @@ function HikeForm({ route, navigation }) {
             <Surface elevation={2} style={commonStyles.formElement}>
                 <TextInput
                     inputMode="numeric"
-                    label="Duration In Hours"
+                    label="Duration In Hours *"
                     value={durationInHours}
                     onChangeText={text => setDurationInHours(text)}
                     style={commonStyles.fillHeight}
@@ -238,7 +238,7 @@ function HikeForm({ route, navigation }) {
 
             <Surface elevation={2} style={commonStyles.formElement}>
                 <DropDown
-                    label={"Difficulty Level"}
+                    label={"Difficulty Level *"}
                     mode={"outlined"}
                     visible={showDropDown}
                     showDropDown={e => setShowDropDown(true)}
@@ -299,7 +299,7 @@ function HikeForm({ route, navigation }) {
                     }}>
                     <TextInput
                         inputMode="numeric"
-                        label="Distance"
+                        label="Distance *"
                         value={distance}
                         onChangeText={text => setDistance(text)}
                         style={{ ...commonStyles.fillHeight, flexBasis: "50%" }}
