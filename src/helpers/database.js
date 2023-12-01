@@ -54,7 +54,9 @@ export const saveHike = async (database, hike) => {
         DATABASE.TABLES.HIKES
     } (name, location, date, isParkingAvailable, durationInHours, difficultyLevel,
         description, rating, distance, distanceUnit) values
-      ('${name}', '${location}', '${date}', '${isParkingAvailable}', '${durationInHours}', '${difficultyLevel}', 
+      ('${name}', '${location}', '${date}', '${
+        isParkingAvailable ? 1 : 0
+    }', '${durationInHours}', '${difficultyLevel}', 
       ${
           description ? `'${description}'` : null
       }, '${rating}', '${distance}', '${distanceUnit}')`;
@@ -76,7 +78,9 @@ export const updateHike = async (database, hike) => {
         distanceUnit,
     } = hike;
 
-    const updateFields = `name = '${name}', location = '${location}', date = '${date}', isParkingAvailable = '${isParkingAvailable}',
+    const updateFields = `name = '${name}', location = '${location}', date = '${date}', isParkingAvailable = '${
+        isParkingAvailable ? 1 : 0
+    }',
     durationInHours = '${durationInHours}', difficultyLevel = '${difficultyLevel}', description = ${
         description ? `'${description}'` : null
     },
